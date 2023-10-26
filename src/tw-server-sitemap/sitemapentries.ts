@@ -31,13 +31,13 @@ const twDateToWebDate = (twDate: Date) => {
 
 const stringify = (data: ITiddlerFields[]) => {
   let x = '';
+  let server = $tw.wiki.getTiddlerText('$:/plugins/linonetwo/tw-server-sitemap/configs/WebsiteURL', '');
+  if (!server.endsWith('/')) {
+    server += '/';
+  }
+  const useHash = $tw.wiki.getTiddlerText('$:/plugins/linonetwo/tw-server-sitemap/configs/UseHashVersion', 'no') === 'yes';
   data.forEach((element) => {
     x += '\t<url>\n';
-    let server = $tw.wiki.getTiddlerText('$:/plugins/linonetwo/tw-server-sitemap/configs/WebsiteURL', '');
-    if (!server.endsWith('/')) {
-      server += '/';
-    }
-    const useHash = $tw.wiki.getTiddlerText('$:/plugins/linonetwo/tw-server-sitemap/configs/UseHashVersion', 'no') === 'yes';
     x += `\t\t<loc>${server}${useHash ? '#:' : ''}${element.title.replaceAll(' ', '%2520')}</loc>\n`;
     if (element.modified) {
       x += '\t\t<lastmod>' + twDateToWebDate($tw.utils.parseDate(element.modified)!) + '</lastmod>\n';
