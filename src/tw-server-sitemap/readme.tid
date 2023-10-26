@@ -1,0 +1,8 @@
+title: $:/plugins/linonetwo/tw-server-sitemap/readme
+type: text/vnd.tiddlywiki
+
+!! Read Me
+
+Generate Sitemap for your Nodejs based server.
+
+Use this with your NodeJS based wiki server, or your [[blog served with TidGi|https://tidgi.fun/#TidGi%20Feature%20Handbook%2FBlogging%20With%20NAT%20Traversal]].

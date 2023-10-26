@@ -1,0 +1,6 @@
+code-body: yes
+title: $:/plugins/linonetwo/tw-server-sitemap/template/txt
+
+\define tv-config-static() yes
+
+<$transclude mode="block" $output="text/html"/>

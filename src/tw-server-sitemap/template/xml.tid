@@ -1,0 +1,9 @@
+code-body: yes
+title: $:/plugins/linonetwo/tw-server-sitemap/template/xml
+
+\whitespace trim
+\define tv-config-static() yes
+\define tv-wikilink-template() $uri_encoded$
+\import [subfilter{$:/core/config/GlobalImportFilter}]
+
+<$transclude mode="block"/>
