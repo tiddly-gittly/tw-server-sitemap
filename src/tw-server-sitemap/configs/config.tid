@@ -9,6 +9,6 @@ Config of tw-server-sitemap plugin.
 !! Sitemap Config
 
 ;Your Website base URL: (for example, `https://tidgi.fun/` or `https://wiki.onetwo.ren`)
-:<$edit-text tiddler="$:/plugins/linonetwo/tw-server-sitemap/config/WebsiteURL" tabindex=-1 focus=false cancelPopups="yes" fileDrop=no tag="input" />
+:<$edit-text tiddler="$:/plugins/linonetwo/tw-server-sitemap/configs/WebsiteURL" tabindex=-1 focus=false cancelPopups="yes" fileDrop=no tag="input" />
 ;Use hash version of URL in the sitemap
-:<$checkbox tiddler="$:/plugins/linonetwo/tw-server-sitemap/config/UseHashVersion" field="text" checked="yes" unchecked=""> URL with `/#:` will result in loading dynamic version of your wiki, which have full features, but is larger than the static version. </$checkbox>
+:<$checkbox tiddler="$:/plugins/linonetwo/tw-server-sitemap/configs/UseHashVersion" field="text" checked="yes" unchecked=""> URL with `/#:` will result in loading dynamic version of your wiki, which have full features, but is larger than the static version. </$checkbox>

@@ -1,8 +1,25 @@
 title: $:/plugins/linonetwo/tw-server-sitemap/readme
 type: text/vnd.tiddlywiki
 
+\function full-sitemap-link()
+[{$:/plugins/linonetwo/tw-server-sitemap/configs/WebsiteURL}addsuffix[sitemap.xml]]
+\end
+\function full-robots-link()
+[{$:/plugins/linonetwo/tw-server-sitemap/configs/WebsiteURL}addsuffix[robots.txt]]
+\end
+
 !! Read Me
 
 Generate Sitemap for your Nodejs based server.
 
 Use this with your NodeJS based wiki server, or your [[blog served with TidGi|https://tidgi.fun/#TidGi%20Feature%20Handbook%2FBlogging%20With%20NAT%20Traversal]].
+
+!! Contents Links
+
+Sitemap: <a href=<<full-sitemap-link>> target="_blank"><$text text=<<full-sitemap-link>>/></a>
+
+Robots: <a href=<<full-robots-link>> target="_blank"><$text text=<<full-robots-link>>/></a>
+
+> Based on {{$:/plugins/linonetwo/tw-server-sitemap/configs/WebsiteURL}}
+>
+> [[configs/WebsiteURL|$:/plugins/linonetwo/tw-server-sitemap/configs/WebsiteURL]] in [[$:/plugins/linonetwo/tw-server-sitemap/config]]
