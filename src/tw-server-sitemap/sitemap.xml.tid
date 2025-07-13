@@ -1,5 +1,5 @@
 _render_template: $:/plugins/linonetwo/tw-server-sitemap/template/xml
-_render_type: text/plain
+_render_type: application/xml
 code-body: yes
 title: sitemap.xml
 type: text/vnd.tiddlywiki
