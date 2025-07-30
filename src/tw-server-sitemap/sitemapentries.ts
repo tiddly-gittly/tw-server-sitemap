@@ -16,7 +16,8 @@ exports.name = 'sitemapentries';
 
 exports.params = [{ name: 'filter' }];
 
-const escapify = (input: string) => {
+const escapify = (input: string | undefined) => {
+  if (typeof input !== 'string') input = '';
   return input
     .replaceAll(/</gm, '&lt;')
     .replaceAll(/>/gm, '&gt;')
