@@ -18,8 +18,12 @@ Basic usage:
 With custom label:
 
 ```
-<$check-website url="https://tiddlywiki.com/" label="TiddlyWiki" />
+<$check-website url="https://tiddlywiki.com/" label="Tiddly! Wiki!" />
 ```
+
+A beautiful badge will show, act as a clickable link to the website.
+
+<$check-website url="https://tiddlywiki.com/" label="Tiddly! Wiki!" />
 
 With custom check interval:
 
