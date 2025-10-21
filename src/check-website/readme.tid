@@ -1,0 +1,63 @@
+title: $:/plugins/linonetwo/check-website/readme
+type: text/vnd.tiddlywiki
+
+! check-website
+
+Check website availability and display status as a badge.
+
+!! Usage
+
+Basic usage:
+
+```
+<$check-website url="https://tiddlywiki.com/" />
+```
+
+<$check-website url="https://tiddlywiki.com/" /> <$check-website url="https://tiddlywiki-not-exist.com/" />
+
+With custom label:
+
+```
+<$check-website url="https://tiddlywiki.com/" label="TiddlyWiki" />
+```
+
+With custom check interval:
+
+```
+<$check-website url="https://example.com/" label="Example" interval="3s" />
+```
+
+<$check-website url="https://example.com/" label="Example" interval="3s" />
+
+You can see web request in your browser's web dev-tool every 3 seconds.
+
+!! Parameters
+
+* ''url'' - (required) The website URL to check
+* ''label'' - (optional) Custom label for the badge. If not provided, uses the hostname from the URL
+* ''interval'' - (optional) Check interval. Default is `1h`. Supports formats like `5s`, `30m`, `1h`, `1h30m`, `1h30m5s`. Supports seconds (s), minutes (m), and hours (h)
+
+!! Examples
+
+Check TiddlyWiki official site every hour:
+
+```
+<$check-website url="https://tiddlywiki.com/" label="TW" interval="1h" />
+```
+
+Check multiple websites:
+
+```
+<$check-website url="https://tiddlywiki.com/" label="TiddlyWiki" />
+<$check-website url="https://github.com/" label="GitHub" />
+<$check-website url="https://nodejs.org/" label="Node.js" interval="2h" />
+```
+
+!! Features
+
+* Automatically checks website availability at specified intervals
+* Displays status as a clean badge (similar to GitHub badges)
+* Shows "Online" (green), "Offline" (red), or "Checking..." (gray) status
+* Uses the hostname as label when no custom label is provided
+* Clickable badge - click to open the website in a new tab
+* Lightweight and efficient

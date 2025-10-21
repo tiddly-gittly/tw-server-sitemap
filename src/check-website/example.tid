@@ -1,0 +1,41 @@
+title: $:/plugins/linonetwo/check-website/example
+caption: Example
+type: text/vnd.tiddlywiki
+
+!! Website Status Examples
+
+Here are some examples of website status checks:
+
+!!! Single Website Check
+
+<$check-website url="https://tiddlywiki.com/" label="TW" interval="1h" />
+
+!!! Multiple Websites
+
+<$check-website url="https://tiddlywiki.com/" label="TiddlyWiki" />
+
+<$check-website url="https://github.com/" label="GitHub" />
+
+<$check-website url="https://nodejs.org/" label="Node.js" interval="2h" />
+
+!!! Without Custom Label (uses hostname)
+
+<$check-website url="https://www.wikipedia.org/" />
+
+!!! Custom Check Intervals
+
+Check every 30 minutes:
+
+<$check-website url="https://example.com/" label="Example" interval="30m" />
+
+Check every 1 hour and 30 minutes:
+
+<$check-website url="https://example.com/" label="Example" interval="1h30m" />
+
+Check every 10 seconds (useful for testing):
+
+<$check-website url="https://example.com/" label="Test" interval="10s" />
+
+Check every 1 minute and 30 seconds:
+
+<$check-website url="https://example.com/" label="Test" interval="1m30s" />
