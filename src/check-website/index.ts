@@ -10,10 +10,9 @@ class CheckWebsiteWidget extends Widget {
   private intervalId?: number;
   private labelSpan?: HTMLSpanElement;
   private statusSpan?: HTMLSpanElement;
+  private badgeNode?: HTMLSpanElement;
   private followRedirects!: boolean;
   private backgroundMode!: boolean;
-  private logTests!: boolean;
-  private logTiddler!: string;
   private connectActions!: string;
   private disconnectActions!: string;
   private lastStatus: 'online' | 'offline' | 'checking' | 'error' = 'checking';
@@ -23,7 +22,6 @@ class CheckWebsiteWidget extends Widget {
 
     if (changedAttributes.url || changedAttributes.label || changedAttributes.interval || 
         changedAttributes['follow-redirects'] || changedAttributes['background-mode'] ||
-        changedAttributes['log-tests'] || changedAttributes['log-tiddler'] ||
         changedAttributes['connect-actions'] || changedAttributes['disconnect-actions']) {
       this.refreshSelf();
       return true;
@@ -56,9 +54,9 @@ class CheckWebsiteWidget extends Widget {
     });
 
     // Create badge container
-    const badgeNode = $tw.utils.domMaker('span', {
+    this.badgeNode = $tw.utils.domMaker('span', {
       class: 'tc-check-website-badge',
-    });
+    }) as HTMLSpanElement;
 
     // Create badge elements
     this.labelSpan = $tw.utils.domMaker('span', {
@@ -71,9 +69,9 @@ class CheckWebsiteWidget extends Widget {
       text: 'Checking...',
     }) as HTMLSpanElement;
 
-    badgeNode.appendChild(this.labelSpan);
-    badgeNode.appendChild(this.statusSpan);
-    linkElement.appendChild(badgeNode);
+    this.badgeNode.appendChild(this.labelSpan);
+    this.badgeNode.appendChild(this.statusSpan);
+    linkElement.appendChild(this.badgeNode);
 
     parent.insertBefore(linkElement, nextSibling);
     this.domNodes.push(linkElement);
@@ -89,8 +87,6 @@ class CheckWebsiteWidget extends Widget {
     this.checkInterval = this.getAttribute('interval', '1h');
     this.followRedirects = this.getAttribute('follow-redirects', 'yes') === 'yes';
     this.backgroundMode = this.getAttribute('background-mode', 'no') === 'yes';
-    this.logTests = this.getAttribute('log-tests', 'no') === 'yes';
-    this.logTiddler = this.getAttribute('log-tiddler', '');
     this.connectActions = this.getAttribute('connect-actions', '');
     this.disconnectActions = this.getAttribute('disconnect-actions', '');
 
@@ -153,7 +149,7 @@ class CheckWebsiteWidget extends Widget {
    */
   private async checkWebsite(): Promise<void> {
     if (!this.websiteUrl) {
-      this.updateStatus('error', 'No URL');
+      this.updateStatus('error', 'No URL', 'URL parameter is required');
       return;
     }
 
@@ -168,19 +164,19 @@ class CheckWebsiteWidget extends Widget {
       // Check response status
       if (response.ok) {
         // 2xx status codes
-        this.updateStatus('online', 'Online');
+        this.updateStatus('online', 'Online', `HTTP ${response.status}`);
       } else if (response.status >= 300 && response.status < 400) {
         // 3xx redirect codes
         if (this.followRedirects) {
-          this.updateStatus('online', 'Online');
+          this.updateStatus('online', 'Online', `HTTP ${response.status} (redirected)`);
         } else {
-          this.updateStatus('offline', `Redirect (${response.status})`);
+          this.updateStatus('offline', `Redirect (${response.status})`, `HTTP ${response.status}`);
         }
       } else if (response.status >= 400) {
         // 4xx and 5xx error codes
-        this.updateStatus('offline', `Error (${response.status})`);
+        this.updateStatus('offline', `Error (${response.status})`, `HTTP ${response.status}`);
       } else {
-        this.updateStatus('offline', 'Offline');
+        this.updateStatus('offline', 'Offline', `HTTP ${response.status}`);
       }
     } catch (error) {
       // CORS errors or network failures - try with no-cors as fallback
@@ -192,28 +188,27 @@ class CheckWebsiteWidget extends Widget {
         });
         // In no-cors mode, if fetch succeeds without error, consider it online
         // but we can't get the real status code
-        this.updateStatus('online', 'Online (no-cors)');
+        this.updateStatus('online', 'Online', 'Status verified via no-cors mode (HTTP status code not available due to CORS policy)');
       } catch {
-        this.updateStatus('offline', 'Offline');
+        this.updateStatus('offline', 'Offline', 'Network error or unreachable');
       }
-    }
-
-    // Log if enabled
-    if (this.logTests && this.logTiddler) {
-      this.logTestResult();
     }
   }
 
   /**
    * Update the status display
    */
-  private updateStatus(status: 'online' | 'offline' | 'checking' | 'error', text: string): void {
+  private updateStatus(status: 'online' | 'offline' | 'checking' | 'error', text: string, tooltip?: string): void {
     const previousStatus = this.lastStatus;
     this.lastStatus = status;
 
     if (this.statusSpan) {
       this.statusSpan.textContent = text;
       this.statusSpan.className = `tc-check-website-status tc-check-website-${status}`;
+    }
+
+    if (this.badgeNode && tooltip) {
+      this.badgeNode.setAttribute('title', tooltip);
     }
 
     // Trigger actions on status change
@@ -224,28 +219,6 @@ class CheckWebsiteWidget extends Widget {
         this.invokeActionString(this.disconnectActions, this, undefined, { status, url: this.websiteUrl });
       }
     }
-  }
-
-  /**
-   * Log test result to a tiddler
-   */
-  private logTestResult(): void {
-    if (!this.logTiddler) return;
-
-    const timestamp = new Date().toISOString();
-    const logEntry = `${timestamp} - ${this.websiteUrl} - ${this.lastStatus}\n`;
-
-    const tiddler = $tw.wiki.getTiddler(this.logTiddler);
-    const existingText = tiddler ? tiddler.fields.text || '' : '';
-
-    $tw.wiki.addTiddler(new $tw.Tiddler(
-      tiddler,
-      {
-        title: this.logTiddler,
-        text: existingText + logEntry,
-        type: 'text/plain',
-      },
-    ));
   }
 
   /**

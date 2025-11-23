@@ -16,7 +16,6 @@ type: text/vnd.tiddlywiki
 * ''Redirect handling'': Added `follow-redirects` parameter (default: `yes`) to control whether HTTP redirects (301, 302, etc.) should be followed
 * ''Background monitoring'': Added `background-mode` parameter to run checks without displaying the badge
 * ''Action triggers'': Added `connect-actions` and `disconnect-actions` parameters to invoke actions when website status changes
-* ''Test logging'': Added `log-tests` and `log-tiddler` parameters to record monitoring history
 * ''Better error reporting'': Status now shows specific HTTP error codes when available (e.g., "Error (404)", "Redirect (301)")
 * ''CORS fallback'': Automatically falls back to no-cors mode when CORS errors occur, with indication in status text
 

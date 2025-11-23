@@ -42,8 +42,6 @@ You can see web request in your browser's web dev-tool every 3 seconds.
 * ''interval'' - (optional) Check interval. Default is `1h`. Supports formats like `5s`, `30m`, `1h`, `1h30m`, `1h30m5s`. Supports seconds (s), minutes (m), and hours (h)
 * ''follow-redirects'' - (optional) Whether to follow HTTP redirects (3xx). Default is `yes`. If set to `no`, redirects will be shown as offline
 * ''background-mode'' - (optional) Run checks in background without displaying the badge. Default is `no`
-* ''log-tests'' - (optional) Log each test result to a tiddler. Default is `no`
-* ''log-tiddler'' - (optional) The tiddler title to log test results to. Required when `log-tests` is `yes`
 * ''connect-actions'' - (optional) Action string to invoke when website comes online. Available variables: `status` (current status), `url` (the checked URL)
 * ''disconnect-actions'' - (optional) Action string to invoke when website goes offline. Available variables: `status` (current status), `url` (the checked URL)
 
@@ -61,12 +59,6 @@ Check multiple websites:
 <$check-website url="https://tiddlywiki.com/" label="TiddlyWiki" />
 <$check-website url="https://github.com/" label="GitHub" />
 <$check-website url="https://nodejs.org/" label="Node.js" interval="2h" />
-```
-
-Monitor with logging enabled:
-
-```
-<$check-website url="https://example.com/" label="Example" log-tests="yes" log-tiddler="WebsiteMonitorLog" />
 ```
 
 Background monitoring with actions:
@@ -103,6 +95,7 @@ Check without following redirects:
 * Automatically checks website availability at specified intervals
 * Displays status as a clean badge (similar to GitHub badges)
 * Shows "Online" (green), "Offline" (red), or "Checking..." (gray) status
+* Hover over the badge to see detailed status information (HTTP status code or CORS mode)
 * Uses the hostname as label when no custom label is provided
 * Clickable badge - click to open the website in a new tab
 * Lightweight and efficient
@@ -110,5 +103,12 @@ Check without following redirects:
 * Supports HTTP redirects (3xx) with configurable behavior
 * Background monitoring mode without visible badge
 * Action triggers on status changes (online/offline)
-* Optional test logging to track monitoring history
 * CORS-aware: tries normal fetch first, falls back to no-cors mode if needed
+
+!! Understanding Status Messages
+
+The badge shows simple status text ("Online", "Offline", etc.), but you can hover over it to see detailed information:
+
+* When HTTP status code is available, the tooltip shows: `HTTP 200`, `HTTP 404`, etc.
+* When CORS policy prevents reading the status code, the tooltip explains this
+* See [[CORS Explained|$:/plugins/linonetwo/check-website/cors-explained]] for detailed information about why you might see different tooltip messages

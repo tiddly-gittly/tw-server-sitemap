@@ -1,0 +1,106 @@
+title: $:/plugins/linonetwo/check-website/cors-explained
+type: text/vnd.tiddlywiki
+
+! Understanding CORS and Status Messages
+
+When using the `check-website` widget, you may notice different status messages and tooltips. This document explains what they mean.
+
+!! Status Messages
+
+!!! "Online" with HTTP status code
+
+When you hover over the badge and see a tooltip like `HTTP 200`, it means:
+
+* The website responded successfully
+* The plugin was able to verify the exact HTTP status code from the server
+* This happens when the target website allows cross-origin requests (has proper CORS headers)
+
+Example tooltip messages:
+* `HTTP 200` - Success
+* `HTTP 301 (redirected)` - Permanent redirect (when follow-redirects is enabled)
+* `HTTP 302 (redirected)` - Temporary redirect (when follow-redirects is enabled)
+
+!!! "Online" with no-cors mode
+
+When you hover and see: `Status verified via no-cors mode (HTTP status code not available due to CORS policy)`
+
+This means:
+* The website is online and reachable
+* But the browser's CORS policy prevents accessing the HTTP status code
+* The plugin fell back to `no-cors` mode to verify availability
+* This is completely normal for most public websites
+
+!!! "Offline" or "Error"
+
+Error messages will show the specific HTTP status code when available:
+* `Error (404)` - Page not found (tooltip: `HTTP 404`)
+* `Error (500)` - Server error (tooltip: `HTTP 500`)
+* `Redirect (301)` - Redirect detected when `follow-redirects="no"` (tooltip: `HTTP 301`)
+
+!! What is CORS?
+
+[[CORS (Cross-Origin Resource Sharing)|https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS]] is a browser security feature that restricts web pages from making requests to a different domain than the one serving the page.
+
+When you check a website from TiddlyWiki (running in your browser), the browser may block access to response details from other domains for security reasons.
+
+!! Why does this happen?
+
+Example: When you run this in your local TiddlyWiki:
+
+```
+<$check-website url="https://example.com/" label="Example" interval="3s" />
+```
+
+If `example.com` doesn't allow cross-origin requests from your TiddlyWiki's domain (e.g., `file://` protocol or your local server), the browser will:
+
+1. First try to make a normal request to get the HTTP status code
+2. If that fails due to CORS, fall back to `no-cors` mode
+3. In `no-cors` mode, the browser still makes the request to check reachability
+4. But it doesn't expose the HTTP status code or response headers to JavaScript
+5. If the request succeeds, we know the website is online
+6. The tooltip will indicate this was verified via no-cors mode
+
+!! When will I see different modes?
+
+You'll see ''HTTP status codes'' when:
+* Checking websites that have CORS headers allowing your origin
+* Checking your own server that you've configured to allow CORS
+* The target website explicitly allows cross-origin requests from your domain
+
+You'll see ''no-cors mode'' when:
+* Checking public websites (like `example.com`, `google.com`) from local TiddlyWiki
+* The target website doesn't have CORS headers configured to allow your origin
+* The website is online and reachable, but doesn't allow cross-origin status code access
+
+!! Is this a problem?
+
+No! This is a browser security feature working as designed. The "Online" status is still reliable in both cases:
+
+* With HTTP status code: You have full details about the response
+* With no-cors mode: You can confirm the website is reachable
+
+Both modes accurately tell you whether the website is online. The difference is just the level of detail available.
+
+!! Technical Details
+
+The widget uses a two-stage checking strategy:
+
+```javascript
+// Stage 1: Try normal fetch to get HTTP status code
+try {
+  const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+  // Can read response.status here
+} catch (corsError) {
+  // Stage 2: Fall back to no-cors mode
+  try {
+    await fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-cache' });
+    // Success means website is online, but can't read status code
+  } catch (networkError) {
+    // Website is truly offline or unreachable
+  }
+}
+```
+
+This approach gives you the best of both worlds:
+* Detailed HTTP status codes when available
+* Reliable online/offline detection even with CORS restrictions
