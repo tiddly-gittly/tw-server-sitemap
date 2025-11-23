@@ -68,19 +68,52 @@ Background monitoring with actions:
   url="https://myserver.com/" 
   background-mode="yes" 
   interval="5m"
-  disconnect-actions="""<$action-sendmessage $message='tm-notify' $param={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}} />"""
-  connect-actions="""<$action-sendmessage $message='tm-notify' $param={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}} />"""
+  disconnect-actions="""
+    <$action-createtiddler $basetitle='$:/state/ServerStatus' text={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}}>
+      <$action-sendmessage $message='tm-notify' $param=<<createTiddler-title>> />
+    </$action-createtiddler>
+  """
+  connect-actions="""
+    <$action-createtiddler $basetitle='$:/state/ServerStatus' text={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}}>
+      <$action-sendmessage $message='tm-notify' $param=<<createTiddler-title>> />
+    </$action-createtiddler>
+  """
 />
 ```
 
-Or use variables directly in action widgets:
+Or save status to a regular tiddler:
+
+<$check-website 
+  url="https://api.example.com/" 
+  interval="5m"
+  disconnect-actions="""
+    <$action-createtiddler $basetitle='$:/state/ServerStatus' text={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}}>
+      <$action-sendmessage $message='tm-notify' $param=<<createTiddler-title>> />
+    </$action-createtiddler>
+  """
+  connect-actions="""
+    <$action-createtiddler $basetitle='$:/state/ServerStatus' text={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}}>
+      <$action-sendmessage $message='tm-notify' $param=<<createTiddler-title>> />
+    </$action-createtiddler>
+  """
+/>
+
+[[$:/state/ServerStatus]]
 
 ```
 <$check-website 
   url="https://api.example.com/" 
   interval="1m"
-  disconnect-actions="""<$action-setfield $tiddler="ServerStatus" text=<<url>> status=<<status>> timestamp=<<now>> />"""
-  connect-actions="""<$action-setfield $tiddler="ServerStatus" text=<<url>> status=<<status>> timestamp=<<now>> />"""
+  disconnect-actions="""
+    <$action-createtiddler $basetitle='$:/state/ServerStatus' text={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}}>
+      <$action-sendmessage $message='tm-notify' $param=<<createTiddler-title>> />
+    </$action-createtiddler>
+  """
+  connect-actions="""
+    <$action-createtiddler $basetitle='$:/state/ServerStatus' text={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}}>
+      <$action-sendmessage $message='tm-notify' $param=<<createTiddler-title>> />
+    </$action-createtiddler>
+  """
 />
 ```
 

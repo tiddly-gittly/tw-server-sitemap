@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /**
 Macro to output tiddlers matching a filter to sitemap.xml entries.
 http://www.sitemaps.org/protocol.html

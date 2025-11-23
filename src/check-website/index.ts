@@ -17,12 +17,10 @@ class CheckWebsiteWidget extends Widget {
   private disconnectActions!: string;
   private lastStatus: 'online' | 'offline' | 'checking' | 'error' = 'checking';
 
-  refresh(changedTiddlers: IChangedTiddlers): boolean {
+  refresh(_changedTiddlers: IChangedTiddlers): boolean {
     const changedAttributes = this.computeAttributes();
 
-    if (changedAttributes.url || changedAttributes.label || changedAttributes.interval || 
-        changedAttributes['follow-redirects'] || changedAttributes['background-mode'] ||
-        changedAttributes['connect-actions'] || changedAttributes['disconnect-actions']) {
+    if (Object.keys(changedAttributes).length > 0) {
       this.refreshSelf();
       return true;
     }
@@ -56,18 +54,18 @@ class CheckWebsiteWidget extends Widget {
     // Create badge container
     this.badgeNode = $tw.utils.domMaker('span', {
       class: 'tc-check-website-badge',
-    }) as HTMLSpanElement;
+    });
 
     // Create badge elements
     this.labelSpan = $tw.utils.domMaker('span', {
       class: 'tc-check-website-label',
       text: this.websiteLabel,
-    }) as HTMLSpanElement;
+    });
 
     this.statusSpan = $tw.utils.domMaker('span', {
       class: 'tc-check-website-status tc-check-website-checking',
       text: 'Checking...',
-    }) as HTMLSpanElement;
+    });
 
     this.badgeNode.appendChild(this.labelSpan);
     this.badgeNode.appendChild(this.statusSpan);
@@ -108,15 +106,15 @@ class CheckWebsiteWidget extends Widget {
    * Parse interval string to milliseconds
    * Supports: 1h, 30m, 5s, 1h30m, 1h30m5s, etc.
    */
-  private parseInterval(intervalStr: string): number {
-    if (!intervalStr) {
+  private parseInterval(intervalString: string): number {
+    if (!intervalString) {
       return 3600000; // default 1 hour
     }
 
     let totalMs = 0;
-    const hours = /(\d+)h/.exec(intervalStr);
-    const minutes = /(\d+)m/.exec(intervalStr);
-    const seconds = /(\d+)s/.exec(intervalStr);
+    const hours = /(\d+)h/.exec(intervalString);
+    const minutes = /(\d+)m/.exec(intervalString);
+    const seconds = /(\d+)s/.exec(intervalString);
 
     if (hours) {
       totalMs += parseInt(hours[1], 10) * 3600000;
@@ -178,7 +176,7 @@ class CheckWebsiteWidget extends Widget {
       } else {
         this.updateStatus('offline', 'Offline', `HTTP ${response.status}`);
       }
-    } catch (error) {
+    } catch {
       // CORS errors or network failures - try with no-cors as fallback
       try {
         await fetch(this.websiteUrl, {
@@ -212,7 +210,8 @@ class CheckWebsiteWidget extends Widget {
     }
 
     // Trigger actions on status change
-    if (previousStatus !== status && previousStatus !== 'checking') {
+    // Trigger actions when status changes, except when both are 'checking'
+    if (previousStatus !== status && status !== 'checking') {
       if (status === 'online' && this.connectActions) {
         this.invokeActionString(this.connectActions, this, undefined, { status, url: this.websiteUrl });
       } else if (status === 'offline' && this.disconnectActions) {
