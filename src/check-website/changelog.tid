@@ -1,0 +1,43 @@
+title: $:/plugins/linonetwo/check-website/changelog
+type: text/vnd.tiddlywiki
+
+! Changelog
+
+!! 0.1.0 - 2025-11-23
+
+!!! Breaking Changes
+
+* Changed from `no-cors` mode to normal fetch mode with fallback, which allows proper HTTP status code detection
+
+!!! New Features
+
+* ''Full URL path checking'': Now checks the complete URL including path, not just the domain. A 404 error will correctly show as offline
+* ''HTTP status code detection'': Properly detects and reports HTTP status codes (2xx, 3xx, 4xx, 5xx)
+* ''Redirect handling'': Added `follow-redirects` parameter (default: `yes`) to control whether HTTP redirects (301, 302, etc.) should be followed
+* ''Background monitoring'': Added `background-mode` parameter to run checks without displaying the badge
+* ''Action triggers'': Added `connect-actions` and `disconnect-actions` parameters to invoke actions when website status changes
+* ''Test logging'': Added `log-tests` and `log-tiddler` parameters to record monitoring history
+* ''Better error reporting'': Status now shows specific HTTP error codes when available (e.g., "Error (404)", "Redirect (301)")
+* ''CORS fallback'': Automatically falls back to no-cors mode when CORS errors occur, with indication in status text
+
+!!! Improvements
+
+* Improved status change detection to avoid triggering actions on initial check
+* Better handling of edge cases like SSL certificate errors and network failures
+* Enhanced documentation with more examples
+
+!!! Bug Fixes
+
+* Fixed issue where HTTP redirects were incorrectly shown as offline
+* Fixed issue where 404 errors on valid domains were shown as online
+* Fixed issue where plain HTTP sites were incorrectly reported as offline
+
+---
+
+!! 0.0.1 - 2025-10-21
+
+* Initial release
+* Basic website availability checking
+* Badge display with online/offline status
+* Configurable check interval
+* Support for custom labels

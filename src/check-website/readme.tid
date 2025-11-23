@@ -40,6 +40,12 @@ You can see web request in your browser's web dev-tool every 3 seconds.
 * ''url'' - (required) The website URL to check
 * ''label'' - (optional) Custom label for the badge. If not provided, uses the hostname from the URL
 * ''interval'' - (optional) Check interval. Default is `1h`. Supports formats like `5s`, `30m`, `1h`, `1h30m`, `1h30m5s`. Supports seconds (s), minutes (m), and hours (h)
+* ''follow-redirects'' - (optional) Whether to follow HTTP redirects (3xx). Default is `yes`. If set to `no`, redirects will be shown as offline
+* ''background-mode'' - (optional) Run checks in background without displaying the badge. Default is `no`
+* ''log-tests'' - (optional) Log each test result to a tiddler. Default is `no`
+* ''log-tiddler'' - (optional) The tiddler title to log test results to. Required when `log-tests` is `yes`
+* ''connect-actions'' - (optional) Action string to invoke when website comes online. Available variables: `status` (current status), `url` (the checked URL)
+* ''disconnect-actions'' - (optional) Action string to invoke when website goes offline. Available variables: `status` (current status), `url` (the checked URL)
 
 !! Examples
 
@@ -57,6 +63,41 @@ Check multiple websites:
 <$check-website url="https://nodejs.org/" label="Node.js" interval="2h" />
 ```
 
+Monitor with logging enabled:
+
+```
+<$check-website url="https://example.com/" label="Example" log-tests="yes" log-tiddler="WebsiteMonitorLog" />
+```
+
+Background monitoring with actions:
+
+```
+<$check-website 
+  url="https://myserver.com/" 
+  background-mode="yes" 
+  interval="5m"
+  disconnect-actions="""<$action-sendmessage $message='tm-notify' $param={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}} />"""
+  connect-actions="""<$action-sendmessage $message='tm-notify' $param={{{ [<status>addprefix[Server ]addsuffix[: ]addsuffix<url>] }}} />"""
+/>
+```
+
+Or use variables directly in action widgets:
+
+```
+<$check-website 
+  url="https://api.example.com/" 
+  interval="1m"
+  disconnect-actions="""<$action-setfield $tiddler="ServerStatus" text=<<url>> status=<<status>> timestamp=<<now>> />"""
+  connect-actions="""<$action-setfield $tiddler="ServerStatus" text=<<url>> status=<<status>> timestamp=<<now>> />"""
+/>
+```
+
+Check without following redirects:
+
+```
+<$check-website url="https://example.com/" follow-redirects="no" />
+```
+
 !! Features
 
 * Automatically checks website availability at specified intervals
@@ -65,3 +106,9 @@ Check multiple websites:
 * Uses the hostname as label when no custom label is provided
 * Clickable badge - click to open the website in a new tab
 * Lightweight and efficient
+* Checks full URL path, not just domain (detects 404 errors)
+* Supports HTTP redirects (3xx) with configurable behavior
+* Background monitoring mode without visible badge
+* Action triggers on status changes (online/offline)
+* Optional test logging to track monitoring history
+* CORS-aware: tries normal fetch first, falls back to no-cors mode if needed
