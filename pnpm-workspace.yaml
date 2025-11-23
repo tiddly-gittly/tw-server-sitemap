@@ -3,3 +3,5 @@ onlyBuiltDependencies:
   - core-js
   - dprint
   - esbuild
+  - svelte-preprocess
+  - unrs-resolver
