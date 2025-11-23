@@ -1,0 +1,52 @@
+.tc-check-website-link {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 2px;
+  vertical-align: middle;
+}
+
+.tc-check-website-link:hover .tc-check-website-badge {
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.tc-check-website-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  border-radius: 3px;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.tc-check-website-label {
+  background-color: #555;
+  color: #fff;
+  padding: 3px 6px;
+  font-weight: 600;
+}
+
+.tc-check-website-status {
+  padding: 3px 6px;
+  color: #fff;
+  font-weight: 400;
+}
+
+.tc-check-website-online {
+  background-color: #4c1;
+}
+
+.tc-check-website-offline {
+  background-color: #e05d44;
+}
+
+.tc-check-website-checking {
+  background-color: #9f9f9f;
+}
+
+.tc-check-website-error {
+  background-color: #e05d44;
+}
