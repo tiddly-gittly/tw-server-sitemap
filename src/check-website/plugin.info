@@ -5,7 +5,7 @@
   "description": "Check website availability or downtime and display status as a badge.",
   "core-version": ">=5.1.22",
   "plugin-type": "plugin",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "list": "readme changelog example",
   "stability": "STABILITY_1_EXPERIMENTAL"
 }
