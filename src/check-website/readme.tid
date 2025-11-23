@@ -5,6 +5,25 @@ type: text/vnd.tiddlywiki
 
 Check website availability and display status as a badge.
 
+{{!!.alert}}
+<div class="tc-message-box">
+
+''⚠️ Limitations:''
+
+This widget is subject to browser security restrictions (CORS/CORP). It works best for:
+
+* Your own websites where you control CORS headers
+* Sites with permissive CORS policies
+
+It may not work accurately for:
+
+* Sites with strict Cross-Origin-Resource-Policy (CORP) headers
+* Detecting specific errors (404, 500) on CORS-restricted sites
+
+See [[CORS Explained|$:/plugins/linonetwo/check-website/cors-explained]] for details.
+
+</div>
+
 !! Usage
 
 Basic usage:
@@ -31,7 +50,7 @@ With custom check interval:
 <$check-website url="https://example.com/" label="Example" interval="3s" />
 ```
 
-<$check-website url="https://example.com/" label="Example" interval="3s" />
+<$check-website url="https://example.com/" label="Example" interval="300s" />
 
 You can see web request in your browser's web dev-tool every 3 seconds.
 

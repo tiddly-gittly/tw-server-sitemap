@@ -74,33 +74,74 @@ You'll see ''no-cors mode'' when:
 
 !! Is this a problem?
 
-No! This is a browser security feature working as designed. The "Online" status is still reliable in both cases:
+Browser security policies (CORS/CORP) impose limitations on what this widget can detect:
 
-* With HTTP status code: You have full details about the response
-* With no-cors mode: You can confirm the website is reachable
+* ''Best case'': Website allows CORS → You get exact HTTP status codes (200, 404, 500, etc.)
+* ''Good case'': Website doesn't have CORS but no CORP → no-cors mode works, can confirm online but not status code
+* ''Limited case'': Website has strict CORP policy → Cannot reliably detect status, may show as offline even when online
 
-Both modes accurately tell you whether the website is online. The difference is just the level of detail available.
+!! Known Limitations
+
+!!! Cross-Origin-Resource-Policy (CORP)
+
+Some websites use [[Cross-Origin-Resource-Policy (CORP)|https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Resource-Policy]] headers for additional security. When a website has CORP enabled:
+
+* Even `no-cors` mode will be blocked by the browser
+* The widget may show "Offline" even though the website is actually online
+* This is a browser security restriction, not a bug in the widget
+
+Examples of websites that may have CORP restrictions:
+* `https://talk.tidgi.fun/` - Has CORP headers, may show as offline
+* Modern security-focused websites with strict cross-origin policies
+
+!!! Inaccurate Status Detection
+
+In `no-cors` mode, the widget cannot distinguish between different HTTP status codes:
+
+* A 404 error may appear as "Online" because the server responded
+* The actual page content doesn't matter, only server reachability
+* For accurate status code detection, the target website must allow CORS
+
+!!! Recommendations
+
+This widget works best for:
+* Monitoring your own websites where you can configure CORS headers
+* Checking websites that already have permissive CORS policies
+* Getting a general sense of server reachability (online vs completely offline)
+
+This widget has limitations for:
+* Websites with strict CORP policies
+* Accurately detecting specific errors (404, 500) on CORS-restricted sites
+* Distinguishing between "page not found" and "server online" without CORS
+
+If you need accurate monitoring of third-party websites, consider:
+* Using a backend proxy service to bypass CORS
+* Using dedicated monitoring services (UptimeRobot, Pingdom, etc.)
+* Monitoring websites you control where you can add CORS headers
 
 !! Technical Details
 
-The widget uses a two-stage checking strategy:
+The widget uses a multi-stage checking strategy:
 
 ```javascript
 // Stage 1: Try normal fetch to get HTTP status code
 try {
   const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
-  // Can read response.status here
+  // Can read response.status here - most accurate
 } catch (corsError) {
-  // Stage 2: Fall back to no-cors mode
+  // Stage 2: Fall back to no-cors mode with GET
   try {
-    await fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-cache' });
-    // Success means website is online, but can't read status code
-  } catch (networkError) {
-    // Website is truly offline or unreachable
+    await fetch(url, { method: 'GET', mode: 'no-cors', cache: 'no-cache' });
+    // Success means server responded, but can't read status code
+  } catch (corpError) {
+    // Stage 3: Try loading an image as final fallback
+    // This can sometimes bypass CORP but is least reliable
+    // May indicate server is reachable but can't verify actual page status
   }
 }
 ```
 
-This approach gives you the best of both worlds:
-* Detailed HTTP status codes when available
-* Reliable online/offline detection even with CORS restrictions
+This approach provides:
+* Best accuracy when CORS is available
+* Reasonable detection when only no-cors works
+* Limited fallback for strict CORP policies

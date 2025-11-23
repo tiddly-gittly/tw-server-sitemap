@@ -179,17 +179,57 @@ class CheckWebsiteWidget extends Widget {
     } catch {
       // CORS errors or network failures - try with no-cors as fallback
       try {
-        await fetch(this.websiteUrl, {
-          method: 'HEAD',
+        const noCorsResponse = await fetch(this.websiteUrl, {
+          method: 'GET',
           mode: 'no-cors',
           cache: 'no-cache',
         });
-        // In no-cors mode, if fetch succeeds without error, consider it online
-        // but we can't get the real status code
-        this.updateStatus('online', 'Online', 'Status verified via no-cors mode (HTTP status code not available due to CORS policy)');
+        
+        // In no-cors mode, response.type will be 'opaque' and status will be 0
+        // We can't determine the actual HTTP status code
+        // If fetch succeeds without throwing, we assume the server is reachable
+        if (noCorsResponse.type === 'opaque') {
+          this.updateStatus('online', 'Online', 'Status verified via no-cors mode (HTTP status code not available due to CORS policy)');
+        } else {
+          // This shouldn't happen in no-cors mode, but handle it anyway
+          this.updateStatus('online', 'Online', 'Status verified via no-cors mode');
+        }
       } catch {
-        this.updateStatus('offline', 'Offline', 'Network error or unreachable');
+        // Try using Image as a last resort to check if server is reachable
+        this.checkWithImage();
       }
+    }
+  }
+
+  /**
+   * Fallback method using Image to check if website is reachable
+   * This bypasses CORS/CORP restrictions but is less reliable
+   */
+  private checkWithImage(): void {
+    const img = new Image();
+    const timeout = setTimeout(() => {
+      img.src = '';
+      this.updateStatus('offline', 'Offline', 'Unable to verify status due to CORS/CORP restrictions');
+    }, 10000); // 10 second timeout
+
+    img.onload = () => {
+      clearTimeout(timeout);
+      this.updateStatus('online', 'Online', 'Status verified via image probe (limited accuracy due to CORS/CORP restrictions)');
+    };
+
+    img.onerror = () => {
+      clearTimeout(timeout);
+      // Image failed to load - could mean offline or just no image at root
+      // Try to determine if it's a real error or CORS/CORP block
+      this.updateStatus('offline', 'Offline', 'Unable to verify status due to CORS/CORP restrictions');
+    };
+
+    // Try to load favicon or root path
+    try {
+      const url = new URL(this.websiteUrl);
+      img.src = `${url.origin}/favicon.ico?_=${Date.now()}`;
+    } catch {
+      img.src = `${this.websiteUrl}?_=${Date.now()}`;
     }
   }
 
