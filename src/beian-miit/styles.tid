@@ -1,0 +1,20 @@
+title: $:/plugins/linonetwo/beian-miit/styles
+tags: $:/tags/Stylesheet
+type: text/vnd.tiddlywiki
+
+.tc-beian-footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  color: rgba(0,0,0,0.6);
+}
+
+.tc-beian-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tc-beian-link:hover {
+  text-decoration: underline;
+}

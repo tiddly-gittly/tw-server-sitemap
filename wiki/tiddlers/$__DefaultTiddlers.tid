@@ -1,4 +1,4 @@
 title: $:/DefaultTiddlers
 type: text/vnd.tiddlywiki
 
-$:/plugins/linonetwo/tw-server-sitemap $:/plugins/linonetwo/check-website
+$:/plugins/linonetwo/tw-server-sitemap $:/plugins/linonetwo/check-website $:/plugins/linonetwo/beian-miit

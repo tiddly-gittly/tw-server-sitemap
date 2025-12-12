@@ -1,0 +1,16 @@
+title: $:/plugins/linonetwo/beian-miit/footer
+type: text/vnd.tiddlywiki
+tags: $:/tags/PageTemplate
+
+\define beianLink()
+<a href="https://beian.miit.gov.cn" class="tc-beian-link" target="_blank" rel="noopener noreferrer">
+<$text text={{$:/plugins/linonetwo/beian-miit/configs/MIITBeianNumber}} />
+</a>
+\end
+
+<!-- Render only if a number is set -->
+<$set name="beian" value={{$:/plugins/linonetwo/beian-miit/configs/MIITBeianNumber}}>
+<$list filter="[<beian>!match[]]">
+<div class="tc-beian-footer"><<beianLink>></div>
+</$list>
+</$set>
