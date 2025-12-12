@@ -2,13 +2,13 @@ title: $:/plugins/linonetwo/beian-miit/config
 tags: $:/tags/ControlPanel/SettingsTab
 caption: 备案号
 
-Config of beian-miit plugin.
+备案号插件配置
 
 ---
 
-!! MIIT Beian Number
+!! 工信部备案号
 
-;Your MIIT ICP/Service Record Number: (for example, `沪ICP备12345678号-1` or `津公网安备12345678901234号`)
+;您的 ICP/服务备案号：（例如 `沪ICP备12345678号-1` 或 `津公网安备12345678901234号`）
 :<$edit-text tiddler="$:/plugins/linonetwo/beian-miit/configs/MIITBeianNumber" tabindex=-1 focus=false cancelPopups="yes" fileDrop=no tag="input" placeholder="填写您的备案号" />
 
-''Note:'' When you fill in the beian number, it will be displayed at the bottom of the page with a link to https://beian.miit.gov.cn. Leave it empty to hide the beian footer.
+''注意：'' 填写备案号后，会在页面底部显示并链接至 https://beian.miit.gov.cn。留空则不显示。
