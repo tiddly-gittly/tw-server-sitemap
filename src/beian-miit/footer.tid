@@ -8,9 +8,28 @@ tags: $:/tags/PageTemplate
 </a>
 \end
 
+\define mpsBeianLink()
+<a href={{{ [[$:/plugins/linonetwo/beian-miit/configs/MPSBeianText]get[text]search-replace:g:regexp[\D],[]addprefix[https://beian.mps.gov.cn/#/query/webSearch?code=]] }}} class="tc-beian-link tc-mps-beian-link" target="_blank" rel="noopener noreferrer">
+<$image source="$:/plugins/linonetwo/beian-miit/公安备案图标.png" class="tc-mps-beian-icon" />
+<$text text={{$:/plugins/linonetwo/beian-miit/configs/MPSBeianText}} />
+</a>
+\end
+
 <!-- Render only if a number is set -->
 <$set name="beian" value={{$:/plugins/linonetwo/beian-miit/configs/MIITBeianNumber}}>
+<$set name="mpsBeian" value={{$:/plugins/linonetwo/beian-miit/configs/MPSBeianText}}>
+<$list filter="[<beian>!match[]] [<mpsBeian>!match[]] +[limit[1]]">
+<div class="tc-beian-footer">
 <$list filter="[<beian>!match[]]">
-<div class="tc-beian-footer"><<beianLink>></div>
+<<beianLink>>
 </$list>
+<$list filter="[<beian>!match[]] [<mpsBeian>!match[]] +[limit[2]count[]match[2]]">
+<span class="tc-beian-separator"> | </span>
+</$list>
+<$list filter="[<mpsBeian>!match[]]">
+<<mpsBeianLink>>
+</$list>
+</div>
+</$list>
+</$set>
 </$set>

@@ -12,3 +12,12 @@ caption: 备案号
 :<$edit-text tiddler="$:/plugins/linonetwo/beian-miit/configs/MIITBeianNumber" tabindex=-1 focus=false cancelPopups="yes" fileDrop=no tag="input" placeholder="填写您的备案号" />
 
 ''注意：'' 填写备案号后，会在页面底部显示并链接至 https://beian.miit.gov.cn。留空则不显示。
+
+---
+
+!! 公安备案号
+
+;您的公安备案号：（例如 `京公网安备11010102000001号`）
+:<$edit-text tiddler="$:/plugins/linonetwo/beian-miit/configs/MPSBeianText" tabindex=-1 focus=false cancelPopups="yes" fileDrop=no tag="input" placeholder="填写您的公安备案号" />
+
+''注意：'' 填写公安备案号后，会在页面底部显示公安备案徽章，并链接至 https://beian.mps.gov.cn。留空则不显示。

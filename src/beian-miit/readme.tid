@@ -3,15 +3,21 @@ type: text/vnd.tiddlywiki
 
 ! beian-miit
 
-在网页底部添加服务备案号，并链接至工信部网站。
+在网页底部添加服务备案号，支持工信部备案和公安备案。
 
 !! Usage
 
 1. 打开[[控制面板 (Control Panel) - 设置 - 备案号|$:/plugins/linonetwo/beian-miit/config]]，或者直接点击插件条目上方的 `config` 打开
-2. 填写你的备案号，例如：`沪ICP备12345678号-1` 或 `津公网安备12345678901234号`。
-3. 保存后，页面底部会显示备案号，点击将跳转至工信部网站：https://beian.miit.gov.cn。
+2. 填写你的备案号：
+   * ''工信部备案号''：例如 `沪ICP备12345678号-1`
+   * ''公安备案号''：例如 `京公网安备11010102000001号`
+3. 保存后，页面底部会显示备案信息：
+   * 工信部备案号链接至：https://beian.miit.gov.cn
+   * 公安备案号链接至：https://beian.mps.gov.cn
 
-!! Notes
+!! Features
 
-- 仅在填写了备案号时显示。
-- 样式可通过 `$:/plugins/linonetwo/beian-miit/styles` 调整。
+- 支持同时显示工信部备案和公安备案
+- 公安备案带有徽章图标
+- 仅在填写了备案号时显示
+- 样式可通过 `$:/plugins/linonetwo/beian-miit/styles` 调整

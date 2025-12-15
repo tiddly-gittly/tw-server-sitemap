@@ -18,3 +18,19 @@ type: text/vnd.tiddlywiki
 .tc-beian-link:hover {
   text-decoration: underline;
 }
+
+.tc-beian-separator {
+  margin: 0 0.5rem;
+}
+
+.tc-mps-beian-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.tc-mps-beian-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
