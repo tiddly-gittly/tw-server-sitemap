@@ -13,6 +13,7 @@ class CheckWebsiteWidget extends Widget {
   private badgeNode?: HTMLSpanElement;
   private followRedirects!: boolean;
   private backgroundMode!: boolean;
+  private useGet!: boolean;
   private connectActions!: string;
   private disconnectActions!: string;
   private lastStatus: 'online' | 'offline' | 'checking' | 'error' = 'checking';
@@ -85,6 +86,7 @@ class CheckWebsiteWidget extends Widget {
     this.checkInterval = this.getAttribute('interval', '1h');
     this.followRedirects = this.getAttribute('follow-redirects', 'yes') === 'yes';
     this.backgroundMode = this.getAttribute('background-mode', 'no') === 'yes';
+    this.useGet = this.getAttribute('use-get', 'no') === 'yes';
     this.connectActions = this.getAttribute('connect-actions', '');
     this.disconnectActions = this.getAttribute('disconnect-actions', '');
 
@@ -152,12 +154,27 @@ class CheckWebsiteWidget extends Widget {
     }
 
     try {
-      // Use fetch to check website - try with normal mode first to get real status codes
-      const response = await fetch(this.websiteUrl, {
-        method: 'HEAD',
+      // Use GET directly if use-get is enabled, otherwise try HEAD first
+      const method = this.useGet ? 'GET' : 'HEAD';
+      let response = await fetch(this.websiteUrl, {
+        method,
         cache: 'no-cache',
         redirect: this.followRedirects ? 'follow' : 'manual',
       });
+
+      // If HEAD returns 404 or 405 (Method Not Allowed), retry with GET
+      // Some servers (like TiddlyWiki server) don't support HEAD properly
+      if (!this.useGet && (response.status === 404 || response.status === 405 || response.status === 501)) {
+        try {
+          response = await fetch(this.websiteUrl, {
+            method: 'GET',
+            cache: 'no-cache',
+            redirect: this.followRedirects ? 'follow' : 'manual',
+          });
+        } catch {
+          // If GET also fails, use the HEAD response
+        }
+      }
 
       // Check response status
       if (response.ok) {

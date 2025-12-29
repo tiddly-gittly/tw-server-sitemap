@@ -60,6 +60,7 @@ You can see web request in your browser's web dev-tool every 3 seconds.
 * ''label'' - (optional) Custom label for the badge. If not provided, uses the hostname from the URL
 * ''interval'' - (optional) Check interval. Default is `1h`. Supports formats like `5s`, `30m`, `1h`, `1h30m`, `1h30m5s`. Supports seconds (s), minutes (m), and hours (h)
 * ''follow-redirects'' - (optional) Whether to follow HTTP redirects (3xx). Default is `yes`. If set to `no`, redirects will be shown as offline
+* ''use-get'' - (optional) Use GET request instead of HEAD. Default is `no`. Set to `yes` for servers that don't support HEAD properly (like some TiddlyWiki servers). This avoids 404 errors in console but uses more bandwidth
 * ''background-mode'' - (optional) Run checks in background without displaying the badge. Default is `no`
 * ''connect-actions'' - (optional) Action string to invoke when website comes online. Available variables: `status` (current status), `url` (the checked URL)
 * ''disconnect-actions'' - (optional) Action string to invoke when website goes offline. Available variables: `status` (current status), `url` (the checked URL)
@@ -78,6 +79,12 @@ Check multiple websites:
 <$check-website url="https://tiddlywiki.com/" label="TiddlyWiki" />
 <$check-website url="https://github.com/" label="GitHub" />
 <$check-website url="https://nodejs.org/" label="Node.js" interval="2h" />
+```
+
+Check TiddlyWiki server (use GET to avoid console errors):
+
+```
+<$check-website url="https://wiki.example.com/" label="My Wiki" use-get="yes" />
 ```
 
 Background monitoring with actions:
